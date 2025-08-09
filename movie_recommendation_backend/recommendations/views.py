@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import Movie, Favorite, Recommendation
 from .serializers import MovieSerializer, FavoriteSerializer, RecommendationSerializer
 from rest_framework.response import Response
-from .utils.cache import sync_popular_movies, recommend_based_on_favorites
+from .utils.cache import sync_popular_movies, recommend_based_on_favorites, USER_REC_KEY
 from django.core.cache import cache
 
 
@@ -25,8 +25,13 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         return Favorite.objects.filter(user=self.request.user)
     
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-        cache.delete(f"user:{self.request.user.id}:recomendations")
+        obj = serializer.save(user=self.request.user)
+        cache.delete(USER_REC_KEY.format(user_id=self.request.user.id))
+
+    def perform_destroy(self, instance):
+        user_id = instance.user_id
+        instance.delete()
+        cache.delete(USER_REC_KEY.format(user_id=user_id))
 
 class RecommendationViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RecommendationSerializer
