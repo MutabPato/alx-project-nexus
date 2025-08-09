@@ -91,7 +91,7 @@ def recommend_based_on_favorites(user):
                     movie=movie,
                     defaults={"explanation": f"Because you liked {favorite.movie.title}"}
                 )
-                recommendations.append(recommendation)
+                created_recs.append(recommendation)
             except IntegrityError:
                 continue
 
