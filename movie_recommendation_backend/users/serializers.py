@@ -23,7 +23,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
     
     def validate_email(self, value):
-        value = value.lower
+        value = value.lower()
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("A user with this email already exists.")
         return value
@@ -31,6 +31,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+        verbose_name = "User"
+        verbose_name_plural = "Users"
         fields = ['id', 'email', 'first_name', 'last_name', 'phone_number']
 
     

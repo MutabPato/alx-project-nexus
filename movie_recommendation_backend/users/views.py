@@ -13,6 +13,6 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserCreateSerializer
 
     def get_permissions(self):
-        if self.action == ['create']:
+        if self.action == 'create':
             return [AllowAny()] # Allow user registrtion without login
         return [IsAuthenticated()] # All other actions require authentication

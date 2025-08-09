@@ -4,10 +4,12 @@ from .models import Movie, Favorite, Recommendation
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'tmbd_id', 'title', 'description', 'release_date',
-                  'ratings', 'poster_url']
+        fields = ['id', 'tmdb_id', 'title', 'description', 'release_date',
+                  'rating', 'poster_url']
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Favorite
         fields = ['id', 'user', 'movie', 'added_at']
